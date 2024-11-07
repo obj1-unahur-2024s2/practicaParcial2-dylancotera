@@ -1,9 +1,60 @@
-import example.pepita
+import personajes.*
 
-describe "group of tests for pepita" {
+describe "group of tests " {
+  const unHumanoGuerrero = new Humano(rol = guerrero, fuerza = 10)
+  const unOrcoGuerrero = new Orco(rol = guerrero, fuerza = 10)
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  const unHumanoCazador = new Humano(
+    rol = new Cazador(mascota = new Mascota(fuerza = 1, tieneGarras= true, edad = 1)), 
+    fuerza = 20
+    )
+  const otroPersonajeCazador = new Humano(
+    rol = new Cazador(mascota = new Mascota(fuerza = 50,tieneGarras = false, edad= 1)), 
+    fuerza = 20
+    )
+  test "potencial ofensivo de un personaje que es guerrero" {
+    assert.equals(200, unHumanoGuerrero.potencialOfensivo())
+  }
+
+  test "potencial ofensivo de un orco que es guerrero" {
+    assert.equals(220, unOrcoGuerrero.potencialOfensivo())
+  }
+
+  test "potencial ofensivo de un personaje que es cazador con una mascota debil" {
+    assert.equals(202, unHumanoCazador.potencialOfensivo())
+  }
+  test "potencial ofensivo de un personaje que es cazador con una mascota fuerte" {
+    assert.equals(250, otroPersonajeCazador.potencialOfensivo())
+  }
+
+  test "ejercito de orcos ataca una aldea y pierde"{
+    const alianza = new Ejercito(integrantes = [unHumanoGuerrero,unHumanoCazador])
+    const unaAldea = new Aldea(ejercitoDefensor=alianza, tamanio=3)
+    const horda = new Ejercito(integrantes = [unOrcoGuerrero])
+
+    horda.invadir(unaAldea)
+    assert.equals(alianza,unaAldea.ejercitoDefensor())
+
+  }
+
+  test "ejercito de orcos mas grande ataca una aldea y gana"{
+    const alianza = new Ejercito(integrantes = [unHumanoGuerrero,unHumanoCazador])
+    const unaAldea = new Aldea(ejercitoDefensor=alianza, tamanio=3)
+    const horda = new Ejercito(integrantes = [unOrcoGuerrero,unOrcoGuerrero,unOrcoGuerrero])
+
+    horda.invadir(unaAldea)
+    assert.equals(horda,unaAldea.ejercitoDefensor())
+
+  }
+
+test "ejercito de orcos mas grande ataca una ciudad y pierde"{
+    const alianza = new Ejercito(integrantes = [unHumanoGuerrero,unHumanoCazador])
+    const unaCiudad = new Ciudad(ejercitoDefensor=alianza)
+    const horda = new Ejercito(integrantes = [unOrcoGuerrero,unOrcoGuerrero,unOrcoGuerrero])
+
+    horda.invadir(unaCiudad)
+    assert.equals(alianza,unaCiudad.ejercitoDefensor())
+
   }
 
 }
